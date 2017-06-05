@@ -18,24 +18,12 @@ import org.reflections.Reflections;
 
 import java.util.Set;
 
-public class AuthorizationModule extends AbstractModule implements VaadinServiceInitListener, NeedsInjector, NeedsReflections {
+import static com.google.inject.multibindings.Multibinder.newSetBinder;
+
+class AuthorizationModule extends AbstractModule implements VaadinServiceInitListener, NeedsInjector, NeedsReflections {
 
     private Provider<Injector> injectorProvider;
     private Reflections reflections;
-
-    protected void configure() {
-        Multibinder<Authorizer> multibinder = Multibinder.newSetBinder(binder(), Authorizer.class);
-
-        for (Class<? extends Authorizer> authorizerClass : reflections.getSubTypesOf(Authorizer.class)) {
-            multibinder.addBinding().to(authorizerClass);
-        }
-    }
-
-    public void serviceInit(ServiceInitEvent event) {
-        final Key<Set<Authorizer>> authorizerSetKey = Key.get(new TypeLiteral<Set<Authorizer>>(){});
-
-        Authorization.start(() -> injectorProvider.get().getInstance(authorizerSetKey));
-    }
 
     public void setInjectorProvider(Provider<Injector> injectorProvider) {
         this.injectorProvider = injectorProvider;
@@ -43,5 +31,18 @@ public class AuthorizationModule extends AbstractModule implements VaadinService
 
     public void setReflections(Reflections reflections) {
         this.reflections = reflections;
+    }
+
+    protected void configure() {
+        Multibinder<Authorizer> multibinder = newSetBinder(binder(), Authorizer.class);
+
+        reflections.getSubTypesOf(Authorizer.class).forEach(multibinder.addBinding()::to);
+    }
+
+    public void serviceInit(ServiceInitEvent event) {
+        final Key<Set<Authorizer>> authorizerSetKey = Key.get(new TypeLiteral<Set<Authorizer>>(){});
+        final Injector injector = injectorProvider.get();
+
+        Authorization.start(() -> injector.getInstance(authorizerSetKey));
     }
 }
