@@ -45,14 +45,19 @@ class AuthorizationModule extends AbstractModule implements VaadinServiceInitLis
 
         if (authorizerClasses.isEmpty()) {
             logger.severe("no authorizers found in given basePackages, authentication will throw runtime-errors!");
+            return;
         }
+
+        logger.info("authorizers discovered from package-scan:");
 
         for (Class<? extends Authorizer> authorizerClass : authorizerClasses) {
 
-            logger.info(format("discovered authorizer %s", authorizerClass));
+            logger.info("\t" + authorizerClass);
 
             multibinder.addBinding().to(authorizerClass);
         }
+
+        logger.info("\n");
     }
 
     public void serviceInit(ServiceInitEvent event) {
