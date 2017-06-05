@@ -17,8 +17,10 @@ import org.ilay.api.Authorizer;
 import org.reflections.Reflections;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static com.google.inject.multibindings.Multibinder.newSetBinder;
+import static java.lang.String.format;
 
 class AuthorizationModule extends AbstractModule implements VaadinServiceInitListener, NeedsInjector, NeedsReflections {
 
@@ -34,9 +36,23 @@ class AuthorizationModule extends AbstractModule implements VaadinServiceInitLis
     }
 
     protected void configure() {
+
+        final Logger logger = Logger.getGlobal();
+
         Multibinder<Authorizer> multibinder = newSetBinder(binder(), Authorizer.class);
 
-        reflections.getSubTypesOf(Authorizer.class).forEach(multibinder.addBinding()::to);
+        final Set<Class<? extends Authorizer>> authorizerClasses = reflections.getSubTypesOf(Authorizer.class);
+
+        if (authorizerClasses.isEmpty()) {
+            logger.severe("no authorizers found in given basePackages, authentication will throw runtime-errors!");
+        }
+
+        for (Class<? extends Authorizer> authorizerClass : authorizerClasses) {
+
+            logger.info(format("discovered authorizer %s", authorizerClass));
+
+            multibinder.addBinding().to(authorizerClass);
+        }
     }
 
     public void serviceInit(ServiceInitEvent event) {
