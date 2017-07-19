@@ -26,6 +26,9 @@
         </plugins>
     </build>
     <properties>
+        <guice-vaadin.version>2.0.0.alpha1-vaadin8</guice-vaadin.version>
+        <ilay.version>1.0.0</ilay.version>
+        <vaadin-server.version>[8.0,)</vaadin-server.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -33,18 +36,17 @@
         <dependency>
             <groupId>org.ilay</groupId>
             <artifactId>ilay</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-server</artifactId>
-            <version>[8.0.0,)</version>
-            <scope>provided</scope>
+            <version>${ilay.version}</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>guice-vaadin</artifactId>
-            <version>2.0.0.alpha1-vaadin8</version>
+            <version>${guice-vaadin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>${vaadin-server.version}</version>
         </dependency>
     </dependencies>
 </project>
