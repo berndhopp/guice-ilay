@@ -26,7 +26,7 @@
         </plugins>
     </build>
     <properties>
-        <guice-vaadin.version>2.0.0.alpha1-vaadin8</guice-vaadin.version>
+        <guice-vaadin.version>2.0.0-alpha1</guice-vaadin.version>
         <ilay.version>1.0.0</ilay.version>
         <vaadin-server.version>[8.0,)</vaadin-server.version>
         <maven.compiler.source>1.8</maven.compiler.source>
