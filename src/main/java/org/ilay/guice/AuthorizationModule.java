@@ -2,6 +2,7 @@ package org.ilay.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+
 import org.ilay.api.Authorizer;
 import org.reflections.Reflections;
 
@@ -14,17 +15,14 @@ class AuthorizationModule extends AbstractModule {
 
     private final Reflections reflections;
 
-    AuthorizationModule(Reflections reflections){
+    AuthorizationModule(Reflections reflections) {
         this.reflections = reflections;
-
         reflections.merge(new Reflections("org.ilay.guice"));
     }
 
     protected void configure() {
 
         final Logger logger = Logger.getGlobal();
-
-        Multibinder<Authorizer> multibinder = newSetBinder(binder(), Authorizer.class);
 
         final Set<Class<? extends Authorizer>> authorizerClasses = reflections.getSubTypesOf(Authorizer.class);
 
@@ -33,15 +31,13 @@ class AuthorizationModule extends AbstractModule {
             return;
         }
 
-        logger.info("authorizers discovered from package-scan:");
+        Multibinder<Authorizer> multibinder = newSetBinder(binder(), Authorizer.class);
 
         for (Class<? extends Authorizer> authorizerClass : authorizerClasses) {
 
-            logger.info("\t" + authorizerClass);
+            logger.info("installing authorizer " + authorizerClass);
 
             multibinder.addBinding().to(authorizerClass);
         }
-
-        logger.info("\n");
     }
 }
