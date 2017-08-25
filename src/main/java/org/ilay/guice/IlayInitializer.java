@@ -11,7 +11,7 @@ import org.ilay.api.Authorizer;
 
 import java.util.Set;
 
-class IlayInitializer implements VaadinServiceInitListener{
+class IlayInitializer implements VaadinServiceInitListener {
 
     @Inject
     private Provider<Set<Authorizer>> authorizerProvider;

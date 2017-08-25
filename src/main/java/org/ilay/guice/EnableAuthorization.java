@@ -23,8 +23,8 @@ import java.lang.annotation.Target;
  *
  * @author Bernd Hopp
  */
-@Import(AuthorizationModule.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Import(value = AuthorizationModule.class, packagesToScan = "org.ilay.guice")
 public @interface EnableAuthorization {
 }
